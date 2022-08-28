@@ -1,0 +1,67 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Enable BaseOS repo for RHEL 8
+      community.general.rhsm_repository:
+        name: rhel-8-for-x86_64-baseos-rpms
+        state: enabled
+      when:
+        - ansible_facts['distribution'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Enable AppStream repo for RHEL 8
+      community.general.rhsm_repository:
+        name: rhel-8-for-x86_64-appstream-rpms
+        state: enabled
+      when:
+        - ansible_facts['distribution'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Lock subscription-manager version to 8.6
+      community.general.rhsm_release:
+        release: "8.6"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Remove file DNF release lock
+      ansible.builtin.file:
+        path: /etc/dnf/vars/releasever
+        state: absent
+
+    - name: Install DNF versionlock
+      ansible.builtin.dnf:
+        name:
+          - python3-dnf-plugin-versionlock
+        state: present
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Remove DNF version locks
+      ansible.builtin.command: /usr/bin/dnf versionlock clear
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Upgrade RHEL and clones from major release 8
+      ansible.builtin.dnf:
+        update_cache: true
+        name: "*"
+        state: latest
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8
+
+    - name: Install required packages for leapp upgrade
+      ansible.builtin.dnf:
+        name:
+          - leapp-upgrade
+          - cockpit-leapp
+        state: present
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8

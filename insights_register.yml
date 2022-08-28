@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    # Register Insights for local server
+    - name: Register Insights for local server
+      ansible.builtin.command: /usr/bin/insights-client --register
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8

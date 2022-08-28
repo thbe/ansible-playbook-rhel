@@ -1,0 +1,59 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    # Install parted
+    - name: Install parted
+      ansible.builtin.package:
+        name: parted
+        state: present
+
+    # Check if OS disk exist on local system
+    - name: Check if OS disk /dev/disk/azure/root exists
+      ansible.builtin.stat:
+        path: /dev/disk/azure/root
+      register: stat_result_root
+
+    - name: Configure OS disk
+      block:
+        # Setup volume group for OS
+        - name: Create volume group rootvg on /dev/disk/azure/root-part2
+          community.general.lvg:
+            vg: rootvg
+            pvs: /dev/disk/azure/root-part2
+
+        # Setup logical volumes for OS
+        - name: Create 16G logical volume rootlv, usrlv and varlv in volume group rootvg
+          community.general.lvol:
+            vg: rootvg
+            lv: '{{ item }}'
+            size: 16g
+            resizefs: true
+          loop:
+            - rootlv
+            - usrlv
+            - varlv
+
+        - name: Create 4G logical volume homelv and tmplv in volume group rootvg
+          community.general.lvol:
+            vg: rootvg
+            lv: '{{ item }}'
+            size: 4g
+            resizefs: true
+          loop:
+            - homelv
+            - tmplv
+
+        - name: Create 64G logical volume swap in volume group rootvg
+          community.general.lvol:
+            vg: rootvg
+            lv: swap
+            size: 64g
+
+      when:
+        - ansible_facts['system_vendor'] == "Microsoft Corporation"
+        - ansible_facts['product_name'] == "Virtual Machine"
+        - ansible_facts['distribution'] == "RedHat"
+        - stat_result_root.stat.exists

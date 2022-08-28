@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    # Refresh subscription for local server
+    - name: Refresh RHEL subscription
+      ansible.builtin.command: /usr/sbin/subscription-manager refresh
+      when:
+        - ansible_facts['os_family'] == "RedHat"

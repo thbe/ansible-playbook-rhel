@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Register local server with Red Hat
+      ansible.builtin.command: /usr/bin/rhc status
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int == 8

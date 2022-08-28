@@ -1,0 +1,19 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Register local server with RHN
+      community.general.redhat_subscription:
+        state: present
+        username: "{{ rhn_user }}"
+        password: "{{ rhn_password }}"
+        auto_attach: true
+        syspurpose:
+          usage: "Development/Test"
+          role: "Red Hat Enterprise Linux Server"
+          service_level_agreement: "Standard"
+          sync: true
+      when:
+        - ansible_facts['os_family'] == "RedHat"
