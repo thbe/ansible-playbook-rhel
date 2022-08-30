@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    # Autoremove packages from local server
+    - name: Autoremove packages from local servers
+      ansible.builtin.dnf:
+        update_cache: true
+        autoremove: yes
+
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
