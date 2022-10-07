@@ -28,7 +28,7 @@
         - name: Create 16G logical volume rootlv, usrlv and varlv in volume group rootvg
           community.general.lvol:
             vg: rootvg
-            lv: '{{ item }}'
+            lv: "{{ item }}"
             size: 16g
             resizefs: true
           loop:
@@ -39,7 +39,7 @@
         - name: Create 4G logical volume homelv and tmplv in volume group rootvg
           community.general.lvol:
             vg: rootvg
-            lv: '{{ item }}'
+            lv: "{{ item }}"
             size: 4g
             resizefs: true
           loop:
