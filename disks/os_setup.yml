@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Configure local Azure OS disk
+  hosts: all
   become: true
   become_user: root
 
@@ -17,6 +18,11 @@
       register: stat_result_root
 
     - name: Configure OS disk
+      when:
+        - ansible_facts['system_vendor'] == "Microsoft Corporation"
+        - ansible_facts['product_name'] == "Virtual Machine"
+        - ansible_facts['distribution'] == "RedHat"
+        - stat_result_root.stat.exists
       block:
         # Setup volume group for OS
         - name: Create volume group rootvg on /dev/disk/azure/root-part2
@@ -51,9 +57,3 @@
             vg: rootvg
             lv: swap
             size: 64g
-
-      when:
-        - ansible_facts['system_vendor'] == "Microsoft Corporation"
-        - ansible_facts['product_name'] == "Virtual Machine"
-        - ansible_facts['distribution'] == "RedHat"
-        - stat_result_root.stat.exists
