@@ -1,10 +1,10 @@
 ---
-- hosts: all
+- name: Autoremove packages from local server
+  hosts: all
   become: true
   become_user: root
 
   tasks:
-    # Autoremove packages from local server
     - name: Autoremove packages from local servers
       ansible.builtin.dnf:
         update_cache: true

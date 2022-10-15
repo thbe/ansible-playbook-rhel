@@ -1,10 +1,10 @@
 ---
-- hosts: all
+- name: Upgrade local server
+  hosts: all
   become: true
   become_user: root
 
   tasks:
-    # Upgrade local server
     - name: Full upgrade for RHEL and clones
       ansible.builtin.dnf:
         update_cache: true
@@ -13,6 +13,7 @@
         disable_gpg_check: true
         name: "*"
         state: latest
+        update_only: true
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int >= 8

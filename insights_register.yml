@@ -1,10 +1,10 @@
 ---
-- hosts: all
+- name: Register Insights for local server
+  hosts: all
   become: true
   become_user: root
 
   tasks:
-    # Register Insights for local server
     - name: Register Insights for local server
       ansible.builtin.command: /usr/bin/insights-client --register
       when:

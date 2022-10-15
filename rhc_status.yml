@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Check RedHat connector status
+  hosts: all
   become: true
   become_user: root
 

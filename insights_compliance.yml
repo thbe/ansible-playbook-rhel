@@ -1,10 +1,10 @@
 ---
-- hosts: all
+- name: Update compliance for local server
+  hosts: all
   become: true
   become_user: root
 
   tasks:
-    # Update compliance for local server
     - name: Update compliance for local server
       ansible.builtin.command: /usr/bin/insights-client --compliance
       when:

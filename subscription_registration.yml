@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Register local sevrer at RedHat network
+  hosts: all
   become: true
   become_user: root
 

@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Prepare leapp on local server
+  hosts: all
   become: true
   become_user: root
 
@@ -52,6 +53,7 @@
         update_cache: true
         name: "*"
         state: latest
+        update_only: true
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int == 8
