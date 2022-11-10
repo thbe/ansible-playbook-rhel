@@ -8,8 +8,8 @@
     - name: Register local server with RHN
       community.general.redhat_subscription:
         state: present
-        username: "{{ rhn_user }}"
-        password: "{{ rhn_password }}"
+        activationkey: "{{ rhn_activation_key }}"
+        org_id: "{{ rhn_organization_id }}"
         auto_attach: true
         syspurpose:
           usage: "Development/Test"
