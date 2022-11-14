@@ -5,16 +5,44 @@
   become_user: root
 
   tasks:
-    - name: Register local server with RHN
+    - name: Register local server with RHN (Premium)
       community.general.redhat_subscription:
         state: present
         activationkey: "{{ rhn_activation_key }}"
         org_id: "{{ rhn_organization_id }}"
-        auto_attach: true
+        syspurpose:
+          usage: "Production"
+          role: "Red Hat Enterprise Linux Server"
+          service_level_agreement: "Premium"
+          sync: true
+      when:
+        - rhn_activation_key == "Premium-RHEL"
+        - ansible_facts['os_family'] == "RedHat"
+
+    - name: Register local server with RHN (Standard)
+      community.general.redhat_subscription:
+        state: present
+        activationkey: "{{ rhn_activation_key }}"
+        org_id: "{{ rhn_organization_id }}"
         syspurpose:
           usage: "Development/Test"
           role: "Red Hat Enterprise Linux Server"
           service_level_agreement: "Standard"
           sync: true
       when:
+        - rhn_activation_key == "Standard-RHEL"
+        - ansible_facts['os_family'] == "RedHat"
+
+    - name: Register local server with RHN (Development)
+      community.general.redhat_subscription:
+        state: present
+        activationkey: "{{ rhn_activation_key }}"
+        org_id: "{{ rhn_organization_id }}"
+        syspurpose:
+          usage: "Development/Test"
+          role: "Red Hat Enterprise Linux Server"
+          service_level_agreement: "Self-Support"
+          sync: true
+      when:
+        - rhn_activation_key == "Developer-RHEL"
         - ansible_facts['os_family'] == "RedHat"
