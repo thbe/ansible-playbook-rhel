@@ -3,6 +3,8 @@
   hosts: all
   become: true
   become_user: root
+  vars:
+    rhel_release_version: "latest"
 
   tasks:
     - name: Full upgrade for RHEL and clones
@@ -17,3 +19,19 @@
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int >= 8
+        - rhel_release_version == "latest"
+
+    - name: Full upgrade for RHEL and clones, restricted to {{ rhel_release_version }}
+      ansible.builtin.dnf:
+        update_cache: true
+        skip_broken: true
+        nobest: true
+        name: "*"
+        state: latest
+        update_only: true
+        exclude: kernel*
+        releasever: "{{ rhel_release_version }}"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
+        - rhel_release_version != "latest"
