@@ -15,6 +15,7 @@
           role: "Red Hat Enterprise Linux Server"
           service_level_agreement: "Premium"
           sync: true
+        auto_attach: true
       when:
         - rhn_activation_key == "Premium-RHEL"
         - ansible_facts['os_family'] == "RedHat"
@@ -29,6 +30,7 @@
           role: "Red Hat Enterprise Linux Server"
           service_level_agreement: "Standard"
           sync: true
+        auto_attach: true
       when:
         - rhn_activation_key == "Standard-RHEL"
         - ansible_facts['os_family'] == "RedHat"
@@ -43,6 +45,7 @@
           role: "Red Hat Enterprise Linux Server"
           service_level_agreement: "Self-Support"
           sync: true
+        auto_attach: true
       when:
         - rhn_activation_key == "Developer-RHEL"
         - ansible_facts['os_family'] == "RedHat"
