@@ -11,7 +11,6 @@
         activationkey: "{{ rhn_activation_key }}"
         org_id: "{{ rhn_organization_id }}"
         pool_ids: "{{ rhn_pool_id }}"
-        auto_attach: false
         syspurpose:
           usage: "Development/Test"
           role: "Red Hat Enterprise Linux Server"
@@ -27,7 +26,6 @@
         activationkey: "{{ rhn_activation_key }}"
         org_id: "{{ rhn_organization_id }}"
         pool_ids: "{{ rhn_pool_id }}"
-        auto_attach: false
         syspurpose:
           usage: "Development/Test"
           role: "Red Hat Enterprise Linux Server"
@@ -43,7 +41,6 @@
         activationkey: "{{ rhn_activation_key }}"
         org_id: "{{ rhn_organization_id }}"
         pool_ids: "{{ rhn_pool_id }}"
-        auto_attach: false
         syspurpose:
           usage: "Development/Test"
           role: "Red Hat Enterprise Linux Server"
@@ -59,7 +56,6 @@
         activationkey: "{{ rhn_activation_key }}"
         org_id: "{{ rhn_organization_id }}"
         pool_ids: "{{ rhn_pool_id }}"
-        auto_attach: false
         syspurpose:
           usage: "Production"
           role: "Red Hat Enterprise Linux Server"
