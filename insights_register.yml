@@ -6,7 +6,11 @@
 
   tasks:
     - name: Register Insights for local server
-      ansible.builtin.command: /usr/bin/insights-client --register
+      ansible.builtin.command:
+        cmd: /usr/bin/insights-client --register
+      register: insight_client_register
+      changed_when: false
+      failed_when: "'FAILED' in insight_client_register.stderr"
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int >= 8

@@ -3,6 +3,10 @@
   hosts: all
   become: true
   become_user: root
+  vars:
+    rhn_activation_key: "unset"
+    rhn_organization_id: "unset"
+    rhn_pool_id: "unset"
 
   tasks:
     - name: Register in RHN with RHEL development subscription

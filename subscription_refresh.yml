@@ -6,6 +6,10 @@
 
   tasks:
     - name: Refresh RHEL subscription
-      ansible.builtin.command: /usr/sbin/subscription-manager refresh
+      ansible.builtin.command:
+        cmd: /usr/sbin/subscription-manager refresh
+      register: subscription_manager_refresh
+      changed_when: false
+      failed_when: "'FAILED' in subscription_manager_refresh.stderr"
       when:
         - ansible_facts['os_family'] == "RedHat"

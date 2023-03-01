@@ -43,7 +43,11 @@
         - ansible_facts['distribution_major_version']|int == 8
 
     - name: Remove DNF version locks
-      ansible.builtin.command: /usr/bin/dnf versionlock clear
+      ansible.builtin.command:
+        cmd: /usr/bin/dnf versionlock clear
+      register: dnf_version_lock
+      changed_when: false
+      failed_when: "'FAILED' in dnf_version_lock.stderr"
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int == 8

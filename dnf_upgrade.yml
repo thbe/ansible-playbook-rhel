@@ -4,17 +4,20 @@
   become: true
   become_user: root
   vars:
+    dnf_skip_broken: false
+    dnf_nobest: false
     rhel_release_version: "latest"
 
   tasks:
     - name: Full upgrade for RHEL and clones
       ansible.builtin.dnf:
         update_cache: true
-        skip_broken: true
-        nobest: true
+        update_only: true
+        skip_broken: "{{ dnf_skip_broken }}"
+        nobest: "{{ dnf_nobest }}"
+        releasever: "{{ rhel_release_version }}"
         name: "*"
         state: latest
-        update_only: true
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int >= 8
@@ -23,12 +26,12 @@
     - name: Full upgrade for RHEL and clones, restricted to {{ rhel_release_version }}
       ansible.builtin.dnf:
         update_cache: true
-        skip_broken: true
-        nobest: true
+        update_only: true
+        skip_broken: "{{ dnf_skip_broken }}"
+        nobest: "{{ dnf_nobest }}"
+        releasever: "{{ rhel_release_version }}"
         name: "*"
         state: latest
-        update_only: true
-        releasever: "{{ rhel_release_version }}"
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int >= 8

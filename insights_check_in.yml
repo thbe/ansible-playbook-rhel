@@ -6,7 +6,11 @@
 
   tasks:
     - name: Insight check in for local server
-      ansible.builtin.command: /usr/bin/insights-client --checkin
+      ansible.builtin.command:
+        cmd: /usr/bin/insights-client --checkin
+      register: insight_client_checkin
+      changed_when: false
+      failed_when: "'FAILED' in insight_client_checkin.stderr"
       when:
         - ansible_facts['os_family'] == "RedHat"
         - ansible_facts['distribution_major_version']|int >= 8
