@@ -1,0 +1,39 @@
+---
+- name: Deploy security patches on local server
+  hosts: all
+  become: true
+  become_user: root
+  vars:
+    dnf_skip_broken: false
+    dnf_nobest: false
+    rhel_release_version: "latest"
+
+  tasks:
+    - name: Deploy security patches for RHEL and clones
+      ansible.builtin.dnf:
+        update_cache: true
+        update_only: true
+        security: true
+        skip_broken: "{{ dnf_skip_broken }}"
+        nobest: "{{ dnf_nobest }}"
+        name: "*"
+        state: latest
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
+        - rhel_release_version == "latest"
+
+    - name: Deploy security patches for RHEL and clones, restricted to {{ rhel_release_version }}
+      ansible.builtin.dnf:
+        update_cache: true
+        update_only: true
+        security: true
+        skip_broken: "{{ dnf_skip_broken }}"
+        nobest: "{{ dnf_nobest }}"
+        releasever: "{{ rhel_release_version }}"
+        name: "*"
+        state: latest
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
+        - rhel_release_version != "latest"
