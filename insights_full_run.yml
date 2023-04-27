@@ -1,0 +1,46 @@
+---
+- name: Full Insight run
+  hosts: all
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Insight check in
+      ansible.builtin.command:
+        cmd: /usr/bin/insights-client --checkin
+      register: insight_client_checkin
+      changed_when: false
+      failed_when: "'FAILED' in insight_client_checkin.stderr"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
+
+    - name: Update generic Insight data
+      ansible.builtin.command:
+        cmd: /usr/bin/insights-client
+      register: insight_client_run
+      changed_when: false
+      failed_when: "'FAILED' in insight_client_run.stderr"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
+
+    - name: Update compliance Insight data
+      ansible.builtin.command:
+        cmd: /usr/bin/insights-client --compliance
+      register: insight_client_compliance
+      changed_when: false
+      failed_when: "'FAILED' in insight_client_compliance.stderr"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
+
+    - name: Update malware Insight data
+      ansible.builtin.command:
+        cmd: /usr/bin/insights-client --collector malware-detection
+      register: insight_client_malware
+      changed_when: false
+      failed_when: "'FAILED' in insight_client_malware.stderr"
+      when:
+        - ansible_facts['os_family'] == "RedHat"
+        - ansible_facts['distribution_major_version']|int >= 8
