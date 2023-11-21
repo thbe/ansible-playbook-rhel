@@ -14,7 +14,6 @@
         state: present
         activationkey: "{{ rhn_activation_key }}"
         org_id: "{{ rhn_organization_id }}"
-        pool_ids: "{{ rhn_pool_id }}"
         syspurpose:
           usage: "Development/Test"
           role: "Red Hat Enterprise Linux Server"
