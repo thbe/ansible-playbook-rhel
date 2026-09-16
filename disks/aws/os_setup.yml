@@ -12,23 +12,22 @@
         state: present
 
     # Check if OS disk exist on local system
-    - name: Check if OS disk /dev/disk/azure/root exists
+    - name: Check if OS data disk /dev/nvme1n1 exists
       ansible.builtin.stat:
-        path: /dev/disk/azure/root
+        path: /dev/nvme1n1
       register: stat_result_root
 
     - name: Configure OS disk
       when:
-        - ansible_facts['system_vendor'] == "Microsoft Corporation"
-        - ansible_facts['product_name'] == "Virtual Machine"
+        - ansible_facts['system_vendor'] == "Amazon EC2"
         - ansible_facts['distribution'] == "RedHat"
         - stat_result_root.stat.exists
       block:
         # Setup volume group for OS
-        - name: Create volume group rootvg on /dev/disk/azure/root-part2
+        - name: Create volume group rootvg on /dev/nvme1n1
           community.general.lvg:
             vg: rootvg
-            pvs: /dev/disk/azure/root-part2
+            pvs: /dev/nvme1n1
 
         # Setup logical volumes for OS
         - name: Create 16G logical volume rootlv, usrlv and varlv in volume group rootvg
